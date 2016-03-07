@@ -29,7 +29,7 @@ public class DirectoryNode {
         System.out.println(directoryJson);
 
         System.out.println("Sending JSON to the nodes");
-        Thread.sleep(10000);
+        Thread.sleep(20000);
         publisher.send(directoryJson);
 
         System.out.println("Finished");
