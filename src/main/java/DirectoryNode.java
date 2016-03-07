@@ -30,7 +30,9 @@ public class DirectoryNode {
 
         System.out.println("Sending JSON to the nodes");
         Thread.sleep(20000);
-        publisher.send(directoryJson);
+        for (int i = 0; i < 10; i++) {
+            publisher.send(directoryJson);
+        }
 
         System.out.println("Finished");
 
