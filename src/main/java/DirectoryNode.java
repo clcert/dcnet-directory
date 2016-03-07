@@ -28,10 +28,10 @@ public class DirectoryNode {
         String directoryJson = gson.toJson(directory);
         System.out.println(directoryJson);
 
-        System.out.println("Sending JSON to the nodes");
         Thread.sleep(20000);
         for (int i = 0; i < 10; i++) {
             publisher.send(directoryJson);
+            System.out.println("Sent JSON to the nodes: #" + (i+1));
             Thread.sleep(5000);
         }
 
