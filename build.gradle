@@ -1,0 +1,25 @@
+group 'niclabs'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'DirectoryNode'
+
+run {
+    standardInput = System.in
+    classpath = sourceSets.main.runtimeClasspath
+    if ( project.hasProperty("appArgs") ) {
+        args Eval.me(appArgs)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile 'org.zeromq:jeromq:0.3.5'
+    compile 'com.google.code.gson:gson:2.5'
+}
