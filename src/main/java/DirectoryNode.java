@@ -2,9 +2,14 @@ import com.google.gson.Gson;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 public class DirectoryNode {
 
     public static void main(String[] args) throws InterruptedException {
+        System.out.println("Directory IP: " + getLocalNetworkIp());
+
         int n = Integer.parseInt(args[0]);
         Directory directory = new Directory(n);
 
@@ -36,6 +41,18 @@ public class DirectoryNode {
 
         System.out.println("Finished");
 
+    }
+
+    private static String getLocalNetworkIp() {
+        String networkIp = "";
+        InetAddress ip;
+        try {
+            ip = InetAddress.getLocalHost();
+            networkIp = ip.getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return networkIp;
     }
 
 }
