@@ -23,9 +23,7 @@ public class DirectoryNode {
         System.out.println("Waiting to receive connections");
         for (int i = 0; i < n; i++) {
             String messageReceived = pull.recvStr();
-            int index = Integer.parseInt(messageReceived.split("%")[0]);
-            String ip = messageReceived.split("%")[1];
-            directory.nodes[i] = new NodeDCNET(index, ip);
+            directory.nodes[i] = new NodeDCNET(i+1, messageReceived);
         }
 
         System.out.println("Creating JSON with {index,ip}");
