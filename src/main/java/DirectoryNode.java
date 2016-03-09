@@ -58,6 +58,10 @@ public class DirectoryNode {
             Thread.sleep(1000);
         }
 
+        // Close both sockets
+        publisher.close();
+        pull.close();
+
         // The task of the directory is over
         System.out.println("Finished");
 
