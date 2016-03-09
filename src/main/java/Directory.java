@@ -1,12 +1,12 @@
 public class Directory {
 
-    NodeDCNET[] nodes;
+    NodeInfo[] nodes;
 
     public Directory(int n) {
-        this.nodes = new NodeDCNET[n];
+        this.nodes = new NodeInfo[n];
     }
 
-    public NodeDCNET[] getNodes() {
+    public NodeInfo[] getNodes() {
         return this.nodes;
     }
 

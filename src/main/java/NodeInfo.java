@@ -1,9 +1,9 @@
-public class NodeDCNET {
+public class NodeInfo {
 
     int index;
     String ip;
 
-    public NodeDCNET(int index, String ip) {
+    public NodeInfo(int index, String ip) {
         this.index = index;
         this.ip = ip;
     }
