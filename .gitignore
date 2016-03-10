@@ -1,6 +1,5 @@
 /.idea
 /directory_dcnet.iml
-*.class
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -20,8 +19,6 @@ build/
 gradle-app.setting
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
-/logs
-/test*
 !gradle-wrapper.jar
 
 # Cache of project
