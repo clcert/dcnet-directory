@@ -1,4 +1,4 @@
-# directory_dcnet
+# directory_dcnet [![Build Status](https://travis-ci.org/niclabs/directory_dcnet.svg?branch=master)](https://travis-ci.org/niclabs/directory_dcnet)
 
 Java program that works as a directory to nodes running a DC-NET room with [collision_resolution_protocol](https://github.com/niclabs/collision_resolution_protocol).
  
@@ -10,7 +10,7 @@ This program must be run within the same LAN that the nodes that want to start a
 
 The IP of the machine that is running this directory must be known to all the nodes that want to connect to the room.
     
-### Run nodes separately
+### Run Directory node
 
 * In order to start a session, the directory node must run the following command:
 
