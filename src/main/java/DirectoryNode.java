@@ -51,11 +51,9 @@ public class DirectoryNode {
         System.out.println(directoryJson);
 
         // Send broadcast through the PUB socket to all the nodes with the Json message created before
-        // TODO: Review if the re-sending of this broadcast is working or not
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 20; i++) {
             publisher.send(directoryJson);
             System.out.println("Sent JSON to the nodes: #" + (i+1));
-            Thread.sleep(1000);
         }
 
         // Close both sockets
