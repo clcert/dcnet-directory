@@ -4,6 +4,10 @@ Java program that works as a directory to nodes running a DC-NET room with [coll
  
 This program waits for the nodes to connect to it and then informs to the rest of every ip address of the nodes.
 
+## System Requirements
+
+* [Java 8](http://www.oracle.com/technetwork/java/index.html)
+
 ## Instructions
 
 This program must be run within the same LAN that the nodes that want to start a DC-NET room session.
@@ -16,3 +20,10 @@ The IP of the machine that is running this directory must be known to all the no
 
     ```./gradlew run -PappArgs=[<totalNumberOfNodes>]```
 
+### Using Docker
+
+* Also you can use [docker](https://www.docker.com/) in order to run a directory node, using the following commands: (first build and create the image, and then running this image)
+
+    ```docker build -t directoryNode .```
+    
+    ```docker run --env N=<totalNumberOfNodes> directoryNode```
