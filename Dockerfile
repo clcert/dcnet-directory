@@ -15,5 +15,4 @@ RUN	cd directory_dcnet/ && \
 	git pull && \
 	./gradlew build
 
-CMD cd directory_dcnet/ && git pull && ./gradlew run -PappArgs=[$N]
-#CMD ["directory_dcnet/gradlew","run","-PappArgs=[$MSG,$N,$INDEX]"]
+CMD cd directory_dcnet/ && git pull > /dev/null 2>&1 && ./gradlew -q run -PappArgs=[$N]
