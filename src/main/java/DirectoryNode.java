@@ -15,14 +15,14 @@ public class DirectoryNode {
 
     // Usage: ./gradlew run -PappArgs=[<numberOfNodes>]
     public static void main(String[] args) throws InterruptedException {
-        // Print Directory IP address
+        // Print NodesInTheRoom IP address
         System.out.println("Directory IP: " + getLocalNetworkIp());
 
-        // Variable to store the number of nodes admitting in the room controlled by this directory node
+        // Variable to store the number of nodes admitting in the room controlled by this nodesInTheRoom node
         int n = Integer.parseInt(args[0]);
 
-        // Create object Directory with the total number of nodes
-        Directory directory = new Directory(n);
+        // Create object NodesInTheRoom with the total number of nodes
+        NodesInTheRoom nodesInTheRoom = new NodesInTheRoom(n);
 
         // Create context where to run the sockets
         ZContext context = new ZContext();
@@ -40,17 +40,18 @@ public class DirectoryNode {
         for (int i = 0; i < n; i++) {
             // Receive a message from the PULL socket, which corresponds to the IP address of this node
             String messageReceived = pull.recvStr();
-            // Assign an index to this node and store it in the directory with his correspondent IP address
-            directory.nodes[i] = new NodeInfo(i+1, messageReceived);
+            // Assign an index to this node and store it in the nodesInTheRoom with his correspondent IP address
+            nodesInTheRoom.nodes[i] = new ParticipantNodeInfoFromDirectory(i+1, messageReceived);
         }
 
-        // Create a Json message with all the information of the directory: every pair {index,ip}
+        // Create a Json message with all the information of the nodesInTheRoom: every pair {index,ip}
         System.out.println("Creating JSON with {index,ip}");
         Gson gson = new Gson();
-        String directoryJson = gson.toJson(directory);
+        String directoryJson = gson.toJson(nodesInTheRoom);
         System.out.println(directoryJson);
 
         // Send broadcast through the PUB socket to all the nodes with the Json message created before
+        // TODO: Check if the continuous resending is working or not
         for (int i = 0; i < 5; i++) {
             publisher.send(directoryJson);
             System.out.println("Sent JSON to the nodes: #" + (i+1));
@@ -61,7 +62,7 @@ public class DirectoryNode {
         publisher.close();
         pull.close();
 
-        // The task of the directory is over
+        // The task of the DirectoryNode is over
         System.out.println("Finished");
 
     }
