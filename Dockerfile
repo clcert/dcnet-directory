@@ -1,7 +1,7 @@
 FROM ubuntu:latest
 MAINTAINER Camilo Gomez <camilo@niclabs.cl>
 
-ENV N 3
+ENV N 3 MSG_SIZE 20
 
 RUN apt-get update && apt-get install -y software-properties-common \
 										 git && \
@@ -15,4 +15,4 @@ RUN	cd directory_dcnet/ && \
 	git pull && \
 	./gradlew build
 
-CMD cd directory_dcnet/ && git pull > /dev/null 2>&1 && ./gradlew -q run -PappArgs=[$N]
+CMD cd directory_dcnet/ && git pull > /dev/null 2>&1 && ./gradlew -q run -PappArgs=[$N,$MSG_SIZE]
