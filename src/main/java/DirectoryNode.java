@@ -21,6 +21,9 @@ public class DirectoryNode {
         // Variable to store the number of nodes admitting in the room controlled by this nodesInTheRoom node
         int n = Integer.parseInt(args[0]);
 
+        // Variable to store the message size, in order to create group for commitments
+        int messageSize = Integer.parseInt(args[1]);
+
         // Create object NodesInTheRoom with the total number of nodes
         NodesInTheRoom nodesInTheRoom = new NodesInTheRoom(n);
 
