@@ -2,6 +2,7 @@ import com.google.gson.Gson;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -15,7 +16,7 @@ public class DirectoryNode {
 
     // Usage: ./gradlew run -PappArgs=[<numberOfNodes>]
     public static void main(String[] args) throws InterruptedException {
-        // Print NodesInTheRoom IP address
+        // Print InfoFromDirectory IP address
         System.out.println("Directory IP: " + getLocalNetworkIp());
 
         // Variable to store the number of nodes admitting in the room controlled by this nodesInTheRoom node
@@ -24,8 +25,15 @@ public class DirectoryNode {
         // Variable to store the message size, in order to create group for commitments
         int messageSize = Integer.parseInt(args[1]);
 
-        // Create object NodesInTheRoom with the total number of nodes
-        NodesInTheRoom nodesInTheRoom = new NodesInTheRoom(n);
+        // Create PedersenCommitment object and extract generators that will be used in the protocol by each of the participantNodes
+        PedersenCommitment pedersenCommitment = new PedersenCommitment(messageSize);
+        BigInteger g = pedersenCommitment.getG();
+        BigInteger h = pedersenCommitment.getH();
+        BigInteger q = pedersenCommitment.getQ();
+        BigInteger p = pedersenCommitment.getP();
+
+        // Create object InfoFromDirectory with the total number of nodes and values of generators
+        InfoFromDirectory infoFromDirectory = new InfoFromDirectory(n, g, h, q, p);
 
         // Create context where to run the sockets
         ZContext context = new ZContext();
@@ -44,13 +52,13 @@ public class DirectoryNode {
             // Receive a message from the PULL socket, which corresponds to the IP address of this node
             String messageReceived = pull.recvStr();
             // Assign an index to this node and store it in the nodesInTheRoom with his correspondent IP address
-            nodesInTheRoom.nodes[i] = new ParticipantNodeInfoFromDirectory(i+1, messageReceived);
+            infoFromDirectory.nodes[i] = new ParticipantNodeInfoFromDirectory(i+1, messageReceived);
         }
 
-        // Create a Json message with all the information of the nodesInTheRoom: every pair {index,ip}
-        System.out.println("Creating JSON with {index,ip}");
+        // Create a Json message with all the information from the directory: every pair {index,ip} and group generators that will be used
+        System.out.println("Creating JSON with the necessary info for the nodes");
         Gson gson = new Gson();
-        String directoryJson = gson.toJson(nodesInTheRoom);
+        String directoryJson = gson.toJson(infoFromDirectory);
         System.out.println(directoryJson);
 
         // Send broadcast through the PUB socket to all the nodes with the Json message created before
