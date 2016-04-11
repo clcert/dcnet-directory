@@ -1,9 +1,9 @@
-public class ParticipantNodeInfoFromDirectory {
+class ParticipantNodeInfoFromDirectory {
 
-    int index;
-    String ip;
+    private int index;
+    private String ip;
 
-    public ParticipantNodeInfoFromDirectory(int index, String ip) {
+    ParticipantNodeInfoFromDirectory(int index, String ip) {
         this.index = index;
         this.ip = ip;
     }

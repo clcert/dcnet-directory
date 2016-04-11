@@ -1,15 +1,14 @@
 import java.math.BigInteger;
 import java.util.Random;
 
-public class PedersenCommitment {
+class PedersenCommitment {
 
-    final int CERTAINTY = 100;
-    int messageSize;
+    private int messageSize;
 
     private BigInteger g, h;
     private BigInteger q, p;
 
-    public PedersenCommitment(int messageSize) {
+    PedersenCommitment(int messageSize) {
         this.messageSize = messageSize;
 
         // Generate prime q bigger than the message and prime p s.t. q|(p-1)
@@ -28,7 +27,7 @@ public class PedersenCommitment {
         this.p = p;
     }
 
-    public BigInteger generateQ(int messageSize) {
+    private BigInteger generateQ(int messageSize) {
         return new BigInteger((messageSize+1)*8, new Random()).nextProbablePrime();
     }
 
@@ -36,6 +35,7 @@ public class PedersenCommitment {
         int i = 1;
         BigInteger p = this.q.multiply(new BigInteger("" + i)).add(BigInteger.ONE);
         while (true) {
+            int CERTAINTY = 100;
             if (p.isProbablePrime(CERTAINTY))
                 break;
             p = this.q.multiply(new BigInteger("" + i)).add(BigInteger.ONE);
@@ -44,7 +44,7 @@ public class PedersenCommitment {
         return p;
     }
 
-    public BigInteger findGenerator() {
+    private BigInteger findGenerator() {
         // Select a random possible <generator> in Z_p
         BigInteger generator = new BigInteger(this.p.bitCount(), new Random()).mod(this.p);
         BigInteger result;
@@ -74,19 +74,19 @@ public class PedersenCommitment {
         // return myPow(this.g, secret).multiply(myPow(this.h,generateRandom()));
     }
 
-    public BigInteger getG() {
+    BigInteger getG() {
         return g;
     }
 
-    public BigInteger getH() {
+    BigInteger getH() {
         return h;
     }
 
-    public BigInteger getQ() {
+    BigInteger getQ() {
         return q;
     }
 
-    public BigInteger getP() {
+    BigInteger getP() {
         return p;
     }
 
