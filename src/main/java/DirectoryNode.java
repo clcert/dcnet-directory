@@ -29,7 +29,7 @@ public class DirectoryNode {
         int padLength = Integer.parseInt(args[2]);
 
         // Create PedersenCommitment object and extract generators that will be used in the protocol by each of the participantNodes
-        PedersenCommitment pedersenCommitment = new PedersenCommitment(l);
+        PedersenCommitment pedersenCommitment = new PedersenCommitment(l, padLength);
         BigInteger g = pedersenCommitment.getG();
         BigInteger h = pedersenCommitment.getH();
         BigInteger q = pedersenCommitment.getQ();

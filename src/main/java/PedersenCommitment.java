@@ -8,8 +8,11 @@ class PedersenCommitment {
     private BigInteger g, h;
     private BigInteger q, p;
 
-    PedersenCommitment(int messageSize) {
+    int padLength;
+
+    PedersenCommitment(int messageSize, int padLength) {
         this.messageSize = messageSize;
+        this.padLength = padLength;
 
         // Generate prime q bigger than the message and prime p s.t. q|(p-1)
         this.q = generateQ(messageSize);
@@ -20,15 +23,21 @@ class PedersenCommitment {
         this.h = findGenerator();
     }
 
-    public PedersenCommitment(BigInteger g, BigInteger h, BigInteger q, BigInteger p) {
+    public PedersenCommitment(BigInteger g, BigInteger h, BigInteger q, BigInteger p, int padLength) {
         this.g = g;
         this.h = h;
         this.q = q;
         this.p = p;
+        this.padLength = padLength;
     }
 
     private BigInteger generateQ(int messageSize) {
-        return new BigInteger((messageSize+1)*8, new Random()).nextProbablePrime();
+        int maxMessageLength = (messageSize + padLength + 4)*8 + 1;
+        BigInteger _a = new BigInteger(maxMessageLength, new Random());
+        while (_a.bitLength() < maxMessageLength) {
+            _a = new BigInteger(maxMessageLength, new Random());
+        }
+        return _a.nextProbablePrime();
     }
 
     private BigInteger generateP() {
