@@ -23,17 +23,20 @@ public class DirectoryNode {
         int n = Integer.parseInt(args[0]);
 
         // Variable to store the message size, in order to create group for commitments
-        int messageSize = Integer.parseInt(args[1]);
+        int l = Integer.parseInt(args[1]);
+
+        // Variable to store the padding length of the future messages to send
+        int padLength = Integer.parseInt(args[2]);
 
         // Create PedersenCommitment object and extract generators that will be used in the protocol by each of the participantNodes
-        PedersenCommitment pedersenCommitment = new PedersenCommitment(messageSize);
+        PedersenCommitment pedersenCommitment = new PedersenCommitment(l);
         BigInteger g = pedersenCommitment.getG();
         BigInteger h = pedersenCommitment.getH();
         BigInteger q = pedersenCommitment.getQ();
         BigInteger p = pedersenCommitment.getP();
 
         // Create object InfoFromDirectory with the total number of nodes and values of generators
-        InfoFromDirectory infoFromDirectory = new InfoFromDirectory(n, g, h, q, p);
+        InfoFromDirectory infoFromDirectory = new InfoFromDirectory(n, g, h, q, p, l, padLength);
 
         // Create context where to run the sockets
         ZContext context = new ZContext();

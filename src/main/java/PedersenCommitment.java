@@ -71,7 +71,6 @@ class PedersenCommitment {
 
     public BigInteger calculateCommitment(BigInteger secret) {
         return this.g.modPow(secret, this.p).multiply(this.h.modPow(generateRandom(), this.p)).mod(this.p);
-        // return myPow(this.g, secret).multiply(myPow(this.h,generateRandom()));
     }
 
     BigInteger getG() {
