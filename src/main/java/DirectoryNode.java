@@ -28,6 +28,9 @@ public class DirectoryNode {
         // Variable to store the padding length of the future messages to send
         int padLength = Integer.parseInt(args[2]);
 
+        // Variable to store non probabilistic mode of the room
+        boolean nonProbabilistic = Boolean.parseBoolean(args[3]);
+
         // Create PedersenCommitment object and extract generators that will be used in the protocol by each of the participantNodes
         PedersenCommitment pedersenCommitment = new PedersenCommitment(l, padLength);
         BigInteger g = pedersenCommitment.getG();
@@ -36,7 +39,7 @@ public class DirectoryNode {
         BigInteger p = pedersenCommitment.getP();
 
         // Create object InfoFromDirectory with the total number of nodes and values of generators
-        InfoFromDirectory infoFromDirectory = new InfoFromDirectory(n, g, h, q, p, l, padLength);
+        InfoFromDirectory infoFromDirectory = new InfoFromDirectory(n, g, h, q, p, l, padLength, nonProbabilistic);
 
         // Create context where to run the sockets
         ZContext context = new ZContext();
