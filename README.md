@@ -18,7 +18,7 @@ The IP of the machine that is running this directory must be known to all the no
 
 * In order to start a session, the directory node must run the following command:
 
-    ```./gradlew run -PappArgs=[<totalNumberOfNodes>]```
+    ```./gradlew run -PappArgs=[<totalNumberOfNodes>, <maximumMessageLength>, <messagePaddingLength>, <nonProbabilisticMode>]```
 
 ### Using Docker
 
@@ -26,4 +26,4 @@ The IP of the machine that is running this directory must be known to all the no
 
     ```docker build -t directoryNode .```
     
-    ```docker run --env N=<totalNumberOfNodes> directoryNode```
+    ```docker run --env N=<totalNumberOfNodes> --env MSG_SIZE=<maximumMessageLength> --env PAD_LENGTH=<messagePaddingLength> --env NON_PROB=<nonProbabilisticMode> directoryNode```
