@@ -32,7 +32,7 @@ public class DirectoryNode {
         boolean nonProbabilistic = Boolean.parseBoolean(args[3]);
 
         // Create PedersenCommitment object and extract generators that will be used in the protocol by each of the participantNodes
-        PedersenCommitment pedersenCommitment = new PedersenCommitment(l, padLength);
+        PedersenCommitment pedersenCommitment = new PedersenCommitment(l, padLength, n);
         BigInteger g = pedersenCommitment.getG();
         BigInteger h = pedersenCommitment.getH();
         BigInteger q = pedersenCommitment.getQ();
