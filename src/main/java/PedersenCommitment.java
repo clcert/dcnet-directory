@@ -3,6 +3,7 @@ import java.util.Random;
 
 class PedersenCommitment {
 
+    private final int roomSize;
     private int messageSize;
 
     private BigInteger g, h;
@@ -10,12 +11,13 @@ class PedersenCommitment {
 
     int padLength;
 
-    PedersenCommitment(int messageSize, int padLength) {
+    PedersenCommitment(int messageSize, int padLength, int roomSize) {
         this.messageSize = messageSize;
         this.padLength = padLength;
+        this.roomSize = roomSize;
 
         // Generate prime q bigger than the message and prime p s.t. q|(p-1)
-        this.q = generateQ(messageSize);
+        this.q = generateQ(messageSize, roomSize);
         this.p = generateP();
 
         // Generate generators {g,h} of group G_q
@@ -23,7 +25,8 @@ class PedersenCommitment {
         this.h = findGenerator();
     }
 
-    public PedersenCommitment(BigInteger g, BigInteger h, BigInteger q, BigInteger p, int padLength) {
+    public PedersenCommitment(int roomSize, BigInteger g, BigInteger h, BigInteger q, BigInteger p, int padLength) {
+        this.roomSize = roomSize;
         this.g = g;
         this.h = h;
         this.q = q;
@@ -31,8 +34,8 @@ class PedersenCommitment {
         this.padLength = padLength;
     }
 
-    private BigInteger generateQ(int messageSize) {
-        int maxMessageLength = (messageSize + padLength + 4)*8 + 1;
+    private BigInteger generateQ(int messageSize, int roomSize) {
+        int maxMessageLength = (int) ((Math.log(roomSize + 1)/Math.log(2))*3 + (messageSize + this.padLength)*8 + 1);
         BigInteger _a = new BigInteger(maxMessageLength, new Random());
         while (_a.bitLength() < maxMessageLength) {
             _a = new BigInteger(maxMessageLength, new Random());
