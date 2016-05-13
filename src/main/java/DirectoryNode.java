@@ -4,7 +4,9 @@ import org.zeromq.ZMQ;
 
 import java.math.BigInteger;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 
 /*
     This application work as the Directory node for the DC-NET room, and is necessary for the nodes
@@ -15,7 +17,7 @@ import java.net.UnknownHostException;
 public class DirectoryNode {
 
     // Usage: ./gradlew run -PappArgs=[<numberOfNodes>]
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, SocketException {
         // Print InfoFromDirectory IP address
         System.out.println("Directory IP: " + getLocalNetworkIp());
 
@@ -85,16 +87,22 @@ public class DirectoryNode {
     }
 
     // Get the LAN IP address of the node
-    private static String getLocalNetworkIp() {
-        String networkIp = "";
-        InetAddress ip;
-        try {
-            ip = InetAddress.getLocalHost();
-            networkIp = ip.getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+    private static String getLocalNetworkIp() throws SocketException {
+        String ip = "";
+        Enumeration e = NetworkInterface.getNetworkInterfaces();
+        while(e.hasMoreElements()) {
+            NetworkInterface n = (NetworkInterface) e.nextElement();
+            if (!n.getDisplayName().contains("docker")) {
+                Enumeration ee = n.getInetAddresses();
+                while (ee.hasMoreElements()) {
+                    InetAddress i = (InetAddress) ee.nextElement();
+                    if (!i.isLinkLocalAddress() && !i.isLoopbackAddress()) {
+                        ip =  i.getHostAddress();
+                    }
+                }
+            }
         }
-        return networkIp;
+        return ip;
     }
 
 }
