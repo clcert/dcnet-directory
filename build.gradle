@@ -6,6 +6,18 @@ apply plugin: 'application'
 
 mainClassName = 'DirectoryNode'
 
+// Create a single .jar with all dependencies
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+                'Implementation-Version': version,
+                'Main-Class': 'DirectoryNode'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
 run {
     standardInput = System.in
     classpath = sourceSets.main.runtimeClasspath
