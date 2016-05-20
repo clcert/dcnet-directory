@@ -4,14 +4,14 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'DirectoryNode'
+mainClassName = 'directorynode.DirectoryNode'
 
 // Create a single .jar with all dependencies
 task fatJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': 'Gradle Jar File Example',
                 'Implementation-Version': version,
-                'Main-Class': 'DirectoryNode'
+                'Main-Class': 'directorynode.DirectoryNode'
     }
     baseName = project.name + '-all'
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }

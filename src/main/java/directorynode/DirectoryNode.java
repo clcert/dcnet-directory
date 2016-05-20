@@ -1,4 +1,8 @@
+package directorynode;
+
 import com.google.gson.Gson;
+import crypto.PedersenCommitment;
+import json.ParticipantNodeInfoFromDirectory;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
@@ -18,7 +22,7 @@ public class DirectoryNode {
 
     // Usage: ./gradlew run -PappArgs=[<numberOfNodes>]
     public static void main(String[] args) throws InterruptedException, SocketException {
-        // Print InfoFromDirectory IP address
+        // Print directorynode.InfoFromDirectory IP address
         System.out.println("Directory IP: " + getLocalNetworkIp());
 
         // Variable to store the number of nodes admitting in the room controlled by this nodesInTheRoom node
@@ -33,14 +37,14 @@ public class DirectoryNode {
         // Variable to store non probabilistic mode of the room
         boolean nonProbabilistic = Boolean.parseBoolean(args[3]);
 
-        // Create PedersenCommitment object and extract generators that will be used in the protocol by each of the participantNodes
+        // Create crypto.PedersenCommitment object and extract generators that will be used in the protocol by each of the participantNodes
         PedersenCommitment pedersenCommitment = new PedersenCommitment(l, padLength, n);
         BigInteger g = pedersenCommitment.getG();
         BigInteger h = pedersenCommitment.getH();
         BigInteger q = pedersenCommitment.getQ();
         BigInteger p = pedersenCommitment.getP();
 
-        // Create object InfoFromDirectory with the total number of nodes and values of generators
+        // Create object directorynode.InfoFromDirectory with the total number of nodes and values of generators
         InfoFromDirectory infoFromDirectory = new InfoFromDirectory(n, g, h, q, p, l, padLength, nonProbabilistic);
 
         // Create context where to run the sockets
@@ -81,7 +85,7 @@ public class DirectoryNode {
         publisher.close();
         pull.close();
 
-        // The task of the DirectoryNode is over
+        // The task of the directorynode.DirectoryNode is over
         System.out.println("Finished");
 
     }

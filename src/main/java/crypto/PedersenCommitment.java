@@ -1,7 +1,9 @@
+package crypto;
+
 import java.math.BigInteger;
 import java.util.Random;
 
-class PedersenCommitment {
+public class PedersenCommitment {
 
     private final int roomSize;
     private int messageSize;
@@ -9,9 +11,9 @@ class PedersenCommitment {
     private BigInteger g, h;
     private BigInteger q, p;
 
-    int padLength;
+    private int padLength;
 
-    PedersenCommitment(int messageSize, int padLength, int roomSize) {
+    public PedersenCommitment(int messageSize, int padLength, int roomSize) {
         this.messageSize = messageSize;
         this.padLength = padLength;
         this.roomSize = roomSize;
@@ -85,19 +87,19 @@ class PedersenCommitment {
         return this.g.modPow(secret, this.p).multiply(this.h.modPow(generateRandom(), this.p)).mod(this.p);
     }
 
-    BigInteger getG() {
+    public BigInteger getG() {
         return g;
     }
 
-    BigInteger getH() {
+    public BigInteger getH() {
         return h;
     }
 
-    BigInteger getQ() {
+    public BigInteger getQ() {
         return q;
     }
 
-    BigInteger getP() {
+    public BigInteger getP() {
         return p;
     }
 
