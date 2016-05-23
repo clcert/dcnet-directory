@@ -27,6 +27,7 @@ public class DirectoryNode {
 
         // Variable to store the number of nodes admitting in the room controlled by this nodesInTheRoom node
         int n = Integer.parseInt(args[0]);
+        System.out.println("Creating room for " + n + " participant nodes");
 
         // Variable to store the message size, in order to create group for commitments
         int l = Integer.parseInt(args[1]);
@@ -59,8 +60,8 @@ public class DirectoryNode {
         pull.bind("tcp://*:5554");
 
         // Wait to receive <numberOfNodes> connections from each node that wants to send a message in this room
-        System.out.println("Waiting to receive connections");
         for (int i = 0; i < n; i++) {
+            System.out.println("Waiting " + (n-i) + " participant nodes");
             // Receive a message from the PULL socket, which corresponds to the IP address of this node
             String messageReceived = pull.recvStr();
             // Assign an index to this node and store it in the nodesInTheRoom with his correspondent IP address
@@ -68,10 +69,8 @@ public class DirectoryNode {
         }
 
         // Create a Json message with all the information from the directory: every pair {index,ip} and group generators that will be used
-        System.out.println("Creating JSON with the necessary info for the nodes");
         Gson gson = new Gson();
         String directoryJson = gson.toJson(infoFromDirectory);
-        System.out.println(directoryJson);
 
         // Send broadcast through the PUB socket to all the nodes with the Json message created before
         // TODO: Check if the continuous resending is working or not
