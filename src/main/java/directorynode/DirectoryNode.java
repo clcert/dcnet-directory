@@ -20,33 +20,31 @@ import java.util.Enumeration;
 
 public class DirectoryNode {
 
-    // Usage: ./gradlew run -PappArgs=[<numberOfNodes>]
-    public static void main(String[] args) throws InterruptedException, SocketException {
-        // Print directorynode.InfoFromDirectory IP address
-        System.out.println("Directory IP: " + getLocalNetworkIp());
+    private String directoryIp;
+    private int roomSize;
+    private int messageLength;
+    private int paddingLength;
+    private boolean nonProbabilistic;
 
-        // Variable to store the number of nodes admitting in the room controlled by this nodesInTheRoom node
-        int n = Integer.parseInt(args[0]);
-        System.out.println("Creating room for " + n + " participant nodes");
+    public boolean configureDirectoryNode(int roomSize, int messageLength, int paddingLength, boolean nonProbabilistic) throws SocketException {
+        this.directoryIp = getLocalNetworkIp();
+        this.roomSize = roomSize;
+        this.messageLength = messageLength;
+        this.paddingLength = paddingLength;
+        this.nonProbabilistic = nonProbabilistic;
+        return true;
+    }
 
-        // Variable to store the message size, in order to create group for commitments
-        int l = Integer.parseInt(args[1]);
-
-        // Variable to store the padding length of the future messages to send
-        int padLength = Integer.parseInt(args[2]);
-
-        // Variable to store non probabilistic mode of the room
-        boolean nonProbabilistic = Boolean.parseBoolean(args[3]);
-
+    public void createRoom() throws InterruptedException, SocketException {
         // Create crypto.PedersenCommitment object and extract generators that will be used in the protocol by each of the participantNodes
-        PedersenCommitment pedersenCommitment = new PedersenCommitment(l, padLength, n);
+        PedersenCommitment pedersenCommitment = new PedersenCommitment(messageLength, paddingLength, roomSize);
         BigInteger g = pedersenCommitment.getG();
         BigInteger h = pedersenCommitment.getH();
         BigInteger q = pedersenCommitment.getQ();
         BigInteger p = pedersenCommitment.getP();
 
         // Create object directorynode.InfoFromDirectory with the total number of nodes and values of generators
-        InfoFromDirectory infoFromDirectory = new InfoFromDirectory(n, g, h, q, p, l, padLength, nonProbabilistic);
+        InfoFromDirectory infoFromDirectory = new InfoFromDirectory(roomSize, g, h, q, p, messageLength, paddingLength, nonProbabilistic);
 
         // Create context where to run the sockets
         ZContext context = new ZContext();
@@ -60,8 +58,8 @@ public class DirectoryNode {
         pull.bind("tcp://*:5554");
 
         // Wait to receive <numberOfNodes> connections from each node that wants to send a message in this room
-        for (int i = 0; i < n; i++) {
-            System.out.println("Waiting " + (n-i) + " participant nodes");
+        for (int i = 0; i < roomSize; i++) {
+            System.out.println("Waiting " + (roomSize-i) + " participant nodes");
             // Receive a message from the PULL socket, which corresponds to the IP address of this node
             String messageReceived = pull.recvStr();
             // Assign an index to this node and store it in the nodesInTheRoom with his correspondent IP address
@@ -106,6 +104,10 @@ public class DirectoryNode {
             }
         }
         return ip;
+    }
+
+    public String getDirectoryIp() {
+        return directoryIp;
     }
 
 }
