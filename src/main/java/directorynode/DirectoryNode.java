@@ -25,6 +25,7 @@ public class DirectoryNode {
     private int messageLength;
     private int paddingLength;
     private boolean nonProbabilistic;
+    private InfoFromDirectory infoFromDirectory;
 
     public boolean configureDirectoryNode(int roomSize, int messageLength, int paddingLength, boolean nonProbabilistic) throws SocketException {
         this.directoryIp = getLocalNetworkIp();
@@ -44,7 +45,7 @@ public class DirectoryNode {
         BigInteger p = pedersenCommitment.getP();
 
         // Create object directorynode.InfoFromDirectory with the total number of nodes and values of generators
-        InfoFromDirectory infoFromDirectory = new InfoFromDirectory(roomSize, g, h, q, p, messageLength, paddingLength, nonProbabilistic);
+        this.infoFromDirectory = new InfoFromDirectory(roomSize, g, h, q, p, messageLength, paddingLength, nonProbabilistic);
 
         // Create context where to run the sockets
         ZContext context = new ZContext();
@@ -63,7 +64,7 @@ public class DirectoryNode {
             // Receive a message from the PULL socket, which corresponds to the IP address of this node
             String messageReceived = pull.recvStr();
             // Assign an index to this node and store it in the nodesInTheRoom with his correspondent IP address
-            infoFromDirectory.nodes[i] = new ParticipantNodeInfoFromDirectory(i+1, messageReceived);
+            this.infoFromDirectory.nodes[i] = new ParticipantNodeInfoFromDirectory(i+1, messageReceived);
         }
 
         // Create a Json message with all the information from the directory: every pair {index,ip} and group generators that will be used
@@ -72,7 +73,7 @@ public class DirectoryNode {
 
         // Send broadcast through the PUB socket to all the nodes with the Json message created before
         // TODO: Check if the continuous resending is working or not
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
             publisher.send(directoryJson);
             System.out.println("Sent JSON to the nodes: #" + (i+1));
             Thread.sleep(3000);
@@ -108,6 +109,16 @@ public class DirectoryNode {
 
     public String getDirectoryIp() {
         return directoryIp;
+    }
+
+    public String[] getNodesIPs() {
+        String[] _a = new String[roomSize];
+        int i = 0;
+        for (ParticipantNodeInfoFromDirectory info : this.infoFromDirectory.nodes) {
+            _a[i] = info.getIp();
+            i++;
+        }
+        return _a;
     }
 
 }

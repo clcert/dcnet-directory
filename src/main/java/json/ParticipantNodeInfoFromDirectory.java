@@ -10,4 +10,7 @@ public class ParticipantNodeInfoFromDirectory {
         this.ip = ip;
     }
 
+    public String getIp() {
+        return ip;
+    }
 }
