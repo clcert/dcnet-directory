@@ -26,6 +26,7 @@ public class DirectoryNode {
     private int paddingLength;
     private boolean nonProbabilistic;
     private InfoFromDirectory infoFromDirectory;
+    private int participantsLeft;
 
     public boolean configureDirectoryNode(int roomSize, int messageLength, int paddingLength, boolean nonProbabilistic) throws SocketException {
         this.directoryIp = getLocalNetworkIp();
@@ -59,8 +60,10 @@ public class DirectoryNode {
         pull.bind("tcp://*:5554");
 
         // Wait to receive <numberOfNodes> connections from each node that wants to send a message in this room
+        participantsLeft = roomSize;
         for (int i = 0; i < roomSize; i++) {
-            System.out.println("Waiting " + (roomSize-i) + " participant nodes");
+            participantsLeft -= i;
+            System.out.println("Waiting " + participantsLeft + " participant nodes");
             // Receive a message from the PULL socket, which corresponds to the IP address of this node
             String messageReceived = pull.recvStr();
             // Assign an index to this node and store it in the nodesInTheRoom with his correspondent IP address
@@ -113,6 +116,10 @@ public class DirectoryNode {
 
     public int getRoomSize() {
         return roomSize;
+    }
+
+    public int getParticipantsLeft() {
+        return participantsLeft;
     }
 
     public String[] getNodesIPs() {
