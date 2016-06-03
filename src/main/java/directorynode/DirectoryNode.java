@@ -11,6 +11,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.Observable;
 
 /*
     This application work as the Directory node for the DC-NET room, and is necessary for the nodes
@@ -26,7 +27,7 @@ public class DirectoryNode {
     private int paddingLength;
     private boolean nonProbabilistic;
     private InfoFromDirectory infoFromDirectory;
-    private int participantsLeft;
+    private ObservableParticipantsLeft participantsLeft;
 
     public boolean configureDirectoryNode(int roomSize, int messageLength, int paddingLength, boolean nonProbabilistic) throws SocketException {
         this.directoryIp = getLocalNetworkIp();
@@ -60,9 +61,9 @@ public class DirectoryNode {
         pull.bind("tcp://*:5554");
 
         // Wait to receive <numberOfNodes> connections from each node that wants to send a message in this room
-        participantsLeft = roomSize;
+        this.participantsLeft = new ObservableParticipantsLeft(roomSize);
         for (int i = 0; i < roomSize; i++) {
-            participantsLeft -= i;
+            participantsLeft.setValue(participantsLeft.getValue() - i);
             System.out.println("Waiting " + participantsLeft + " participant nodes");
             // Receive a message from the PULL socket, which corresponds to the IP address of this node
             String messageReceived = pull.recvStr();
@@ -118,10 +119,6 @@ public class DirectoryNode {
         return roomSize;
     }
 
-    public int getParticipantsLeft() {
-        return participantsLeft;
-    }
-
     public String[] getNodesIPs() {
         String[] _a = new String[roomSize];
         int i = 0;
@@ -130,6 +127,24 @@ public class DirectoryNode {
             i++;
         }
         return _a;
+    }
+
+    private class ObservableParticipantsLeft extends Observable {
+        private int participantsLeft = 0;
+
+        public ObservableParticipantsLeft(int participantsLeft) {
+            this.participantsLeft = participantsLeft;
+        }
+
+        public void setValue(int participantsLeft) {
+            this.participantsLeft = participantsLeft;
+            setChanged();
+            notifyObservers();
+        }
+
+        public int getValue() {
+            return this.participantsLeft;
+        }
     }
 
 }
