@@ -35,6 +35,7 @@ public class DirectoryNode {
         this.messageLength = messageLength;
         this.paddingLength = paddingLength;
         this.nonProbabilistic = nonProbabilistic;
+        this.participantsLeft = new ObservableParticipantsLeft(roomSize);
         return true;
     }
 
@@ -61,12 +62,12 @@ public class DirectoryNode {
         pull.bind("tcp://*:5554");
 
         // Wait to receive <numberOfNodes> connections from each node that wants to send a message in this room
-        this.participantsLeft = new ObservableParticipantsLeft(roomSize);
+        participantsLeft.setValue(roomSize);
         for (int i = 0; i < roomSize; i++) {
-            participantsLeft.setValue(participantsLeft.getValue() - i);
-            System.out.println("Waiting " + participantsLeft + " participant nodes");
+            // System.out.println("Waiting " + participantsLeft.getValue() + " participant nodes");
             // Receive a message from the PULL socket, which corresponds to the IP address of this node
             String messageReceived = pull.recvStr();
+            participantsLeft.setValue(roomSize - (i+1));
             // Assign an index to this node and store it in the nodesInTheRoom with his correspondent IP address
             this.infoFromDirectory.nodes[i] = new ParticipantNodeInfoFromDirectory(i+1, messageReceived);
         }
@@ -79,7 +80,7 @@ public class DirectoryNode {
         // TODO: Check if the continuous resending is working or not
         for (int i = 0; i < 10; i++) {
             publisher.send(directoryJson);
-            System.out.println("Sent JSON to the nodes: #" + (i+1));
+            //System.out.println("Sent JSON to the nodes: #" + (i+1));
             Thread.sleep(100);
         }
 
@@ -88,7 +89,7 @@ public class DirectoryNode {
         pull.close();
 
         // The task of the directorynode.DirectoryNode is over
-        System.out.println("Finished");
+        //System.out.println("Finished");
 
     }
 
@@ -119,6 +120,10 @@ public class DirectoryNode {
         return roomSize;
     }
 
+    public ObservableParticipantsLeft getParticipantsLeft() {
+        return participantsLeft;
+    }
+
     public String[] getNodesIPs() {
         String[] _a = new String[roomSize];
         int i = 0;
@@ -129,7 +134,7 @@ public class DirectoryNode {
         return _a;
     }
 
-    private class ObservableParticipantsLeft extends Observable {
+    public class ObservableParticipantsLeft extends Observable {
         private int participantsLeft = 0;
 
         public ObservableParticipantsLeft(int participantsLeft) {
