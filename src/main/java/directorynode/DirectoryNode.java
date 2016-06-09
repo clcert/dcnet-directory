@@ -27,7 +27,7 @@ public class DirectoryNode {
     private int paddingLength;
     private boolean nonProbabilistic;
     private InfoFromDirectory infoFromDirectory;
-    private ObservableParticipantsLeft participantsLeft;
+    private ObservableParticipantConnected participantConnected;
 
     public boolean configureDirectoryNode(int roomSize, int messageLength, int paddingLength, boolean nonProbabilistic) throws SocketException {
         this.directoryIp = getLocalNetworkIp();
@@ -35,7 +35,7 @@ public class DirectoryNode {
         this.messageLength = messageLength;
         this.paddingLength = paddingLength;
         this.nonProbabilistic = nonProbabilistic;
-        this.participantsLeft = new ObservableParticipantsLeft(roomSize);
+        this.participantConnected = new ObservableParticipantConnected("");
         return true;
     }
 
@@ -62,14 +62,14 @@ public class DirectoryNode {
         pull.bind("tcp://*:5554");
 
         // Wait to receive <numberOfNodes> connections from each node that wants to send a message in this room
-        participantsLeft.setValue(roomSize);
         for (int i = 0; i < roomSize; i++) {
-            // System.out.println("Waiting " + participantsLeft.getValue() + " participant nodes");
+            // System.out.println("Waiting " + participantConnected.getValue() + " participant nodes");
             // Receive a message from the PULL socket, which corresponds to the IP address of this node
             String messageReceived = pull.recvStr();
-            participantsLeft.setValue(roomSize - (i+1));
             // Assign an index to this node and store it in the nodesInTheRoom with his correspondent IP address
             this.infoFromDirectory.nodes[i] = new ParticipantNodeInfoFromDirectory(i+1, messageReceived);
+            // Notify of change to observer
+            participantConnected.setValue(messageReceived);
         }
 
         // Create a Json message with all the information from the directory: every pair {index,ip} and group generators that will be used
@@ -120,8 +120,8 @@ public class DirectoryNode {
         return roomSize;
     }
 
-    public ObservableParticipantsLeft getParticipantsLeft() {
-        return participantsLeft;
+    public ObservableParticipantConnected getParticipantConnected() {
+        return participantConnected;
     }
 
     public String[] getNodesIPs() {
@@ -134,21 +134,21 @@ public class DirectoryNode {
         return _a;
     }
 
-    public class ObservableParticipantsLeft extends Observable {
-        private int participantsLeft = 0;
+    public class ObservableParticipantConnected extends Observable {
+        private String participantConnected = "";
 
-        public ObservableParticipantsLeft(int participantsLeft) {
-            this.participantsLeft = participantsLeft;
+        public ObservableParticipantConnected(String participantConnected) {
+            this.participantConnected = participantConnected;
         }
 
-        public void setValue(int participantsLeft) {
-            this.participantsLeft = participantsLeft;
+        public void setValue(String participantConnected) {
+            this.participantConnected = participantConnected;
             setChanged();
             notifyObservers();
         }
 
-        public int getValue() {
-            return this.participantsLeft;
+        public String getValue() {
+            return this.participantConnected;
         }
     }
 
