@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/directory_dcnet.iml" filepath="$PROJECT_DIR$/.idea/modules/directory_dcnet.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/directory_dcnet_main.iml" filepath="$PROJECT_DIR$/.idea/modules/directory_dcnet_main.iml" group="directory_dcnet" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/directory_dcnet_test.iml" filepath="$PROJECT_DIR$/.idea/modules/directory_dcnet_test.iml" group="directory_dcnet" />
     </modules>
   </component>
 </project>
