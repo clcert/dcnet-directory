@@ -61,15 +61,21 @@ public class DirectoryNode {
         ZMQ.Socket pull = context.createSocket(ZMQ.PULL);
         pull.bind("tcp://*:5554");
 
+        ZMQ.Socket[] participantsConnectedPush = new ZMQ.Socket[roomSize];
         // Wait to receive <numberOfNodes> connections from each node that wants to send a message in this room
         for (int i = 0; i < roomSize; i++) {
-            // System.out.println("Waiting " + participantConnected.getValue() + " participant nodes");
             // Receive a message from the PULL socket, which corresponds to the IP address of this node
             String messageReceived = pull.recvStr();
             // Assign an index to this node and store it in the nodesInTheRoom with his correspondent IP address
             this.infoFromDirectory.nodes[i] = new ParticipantNodeInfoFromDirectory(i+1, messageReceived);
+            // Send ACK to participant that just connected
+            participantsConnectedPush[i] = context.createSocket(ZMQ.PUSH);
+            participantsConnectedPush[i].connect("tcp://" + messageReceived + ":5554");
+            participantsConnectedPush[i].send("ack");
             // Notify of change to observer
             participantConnected.setValue(messageReceived);
+            // Send message to all connected participants of how many participants left to complete the room
+            sendHowManyParticipantsLeft(participantsConnectedPush, i+1);
         }
 
         // Create a Json message with all the information from the directory: every pair {index,ip} and group generators that will be used
@@ -77,20 +83,25 @@ public class DirectoryNode {
         String directoryJson = gson.toJson(infoFromDirectory);
 
         // Send broadcast through the PUB socket to all the nodes with the Json message created before
-        // TODO: Check if the continuous resending is working or not
         for (int i = 0; i < 10; i++) {
             publisher.send(directoryJson);
-            //System.out.println("Sent JSON to the nodes: #" + (i+1));
             Thread.sleep(100);
         }
 
         // Close both sockets
         publisher.close();
         pull.close();
+        for (ZMQ.Socket aParticipantsConnectedPush : participantsConnectedPush) {
+            aParticipantsConnectedPush.close();
+        }
 
-        // The task of the directorynode.DirectoryNode is over
-        //System.out.println("Finished");
+    }
 
+    private void sendHowManyParticipantsLeft(ZMQ.Socket[] participantsConnectedPush, int participantsConnected) {
+        int participantsLeft = roomSize - participantsConnected;
+        for (int i = 0; i < participantsConnected; i++) {
+            participantsConnectedPush[i].send("" + participantsLeft);
+        }
     }
 
     // Get the LAN IP address of the node
