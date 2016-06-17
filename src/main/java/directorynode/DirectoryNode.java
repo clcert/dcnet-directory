@@ -29,6 +29,10 @@ public class DirectoryNode {
     private InfoFromDirectory infoFromDirectory;
     private ObservableParticipantConnected participantConnected;
 
+    public DirectoryNode() {
+        this.participantConnected = new ObservableParticipantConnected("");
+    }
+
     public boolean configureDirectoryNode(int roomSize, int messageLength, int paddingLength, boolean nonProbabilistic) throws SocketException {
         this.directoryIp = getLocalNetworkIp();
         this.roomSize = roomSize;
