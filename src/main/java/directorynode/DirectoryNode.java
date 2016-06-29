@@ -30,7 +30,7 @@ public class DirectoryNode {
     private ObservableParticipantConnected participantConnected;
 
     public DirectoryNode() {
-        this.participantConnected = new ObservableParticipantConnected("");
+        participantConnected = new ObservableParticipantConnected("");
     }
 
     public boolean configureDirectoryNode(int roomSize, int messageLength, int paddingLength, boolean nonProbabilistic) throws SocketException {
@@ -39,7 +39,6 @@ public class DirectoryNode {
         this.messageLength = messageLength;
         this.paddingLength = paddingLength;
         this.nonProbabilistic = nonProbabilistic;
-        this.participantConnected = new ObservableParticipantConnected("");
         return true;
     }
 

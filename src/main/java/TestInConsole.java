@@ -19,6 +19,7 @@ public class TestInConsole {
         directoryNode.configureDirectoryNode(roomSize, messageLength, paddingLength, nonProbabilistic);
         System.out.println("Directory IP: " + directoryNode.getDirectoryIp());
         directoryNode.createRoom();
+        System.out.println("Finished");
 
     }
 
@@ -29,7 +30,7 @@ public class TestInConsole {
 
         public ParticipantConnectedObserver(DirectoryNode.ObservableParticipantConnected observableParticipantConnected) {
             this.observableParticipantConnected = observableParticipantConnected;
-            this.participantConnectedIndex = 0;
+            this.participantConnectedIndex = 1;
         }
 
         @Override
