@@ -28,7 +28,7 @@ public class TestInConsole {
         private DirectoryNode.ObservableParticipantConnected observableParticipantConnected;
         int participantConnectedIndex;
 
-        ParticipantConnectedObserver(DirectoryNode.ObservableParticipantConnected observableParticipantConnected) {
+        public ParticipantConnectedObserver(DirectoryNode.ObservableParticipantConnected observableParticipantConnected) {
             this.observableParticipantConnected = observableParticipantConnected;
             this.participantConnectedIndex = 1;
         }
