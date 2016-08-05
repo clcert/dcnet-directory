@@ -31,4 +31,5 @@ then
 	usage
 fi 
 
+! ls "$(pwd)/build/libs/directory_dcnet-all-1.0-SNAPSHOT.jar" > /dev/null 2<&1 && ./gradlew fatJar > /dev/null 2<&1
 java -jar "$(pwd)/build/libs/directory_dcnet-all-1.0-SNAPSHOT.jar" ${room_size} ${message_max_length} ${padding_length} ${non_probabilistic_mode}
