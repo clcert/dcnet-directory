@@ -58,11 +58,11 @@ public class DirectoryNode {
 
         // Create the PUB socket and bind it to the port 5555
         ZMQ.Socket publisher = context.createSocket(ZMQ.PUB);
-        publisher.bind("tcp://*:5555");
+        publisher.bind("tcp://*:6555");
 
         // Create the PULL socket and bind it to the port 5554
         ZMQ.Socket pull = context.createSocket(ZMQ.PULL);
-        pull.bind("tcp://*:5554");
+        pull.bind("tcp://*:6554");
 
         ZMQ.Socket[] participantsConnectedPush = new ZMQ.Socket[roomSize];
         // Wait to receive <numberOfNodes> connections from each node that wants to send a message in this room
