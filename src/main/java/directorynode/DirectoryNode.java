@@ -45,6 +45,7 @@ public class DirectoryNode {
     public void createRoom() throws InterruptedException, SocketException {
         // Create crypto.PedersenCommitment object and extract generators that will be used in the protocol by each of the participantNodes
         PedersenCommitment pedersenCommitment = new PedersenCommitment(messageLength, paddingLength, roomSize);
+        System.out.println("Waiting for participants...");
         BigInteger g = pedersenCommitment.getG();
         BigInteger h = pedersenCommitment.getH();
         BigInteger q = pedersenCommitment.getQ();
