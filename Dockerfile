@@ -10,9 +10,9 @@ RUN apt-get update && apt-get install -y software-properties-common \
 	apt-get update && apt-get install -y oracle-java8-installer && \
 	rm -rf /var/lib/apt/lists/* && \
 	rm -rf /var/cache/oracle-jdk8-installer && \
-	git clone https://fbb260392f7ae2834a1b495a7bae104443badc3b:x-oauth-basic@github.com/niclabs/directory_dcnet.git
-RUN	cd directory_dcnet/ && \
+	git clone https://github.com/clcert/dcnet-directory.git
+RUN	cd dcnet-directory/ && \
 	git pull && \
 	./gradlew build
 
-CMD cd directory_dcnet/ && git pull > /dev/null 2>&1 && ./gradlew -q run -PappArgs=[$N,$MSG_SIZE,$PAD_LENGTH,$NON_PROB]
+CMD cd dcnet-directory/ && git pull > /dev/null 2>&1 && ./gradlew -q run -PappArgs=[$N,$MSG_SIZE,$PAD_LENGTH,$NON_PROB]
